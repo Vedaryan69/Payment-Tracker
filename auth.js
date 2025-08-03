@@ -33,15 +33,7 @@ function login() {
         });
 }
 
-function signInWithGoogle() {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider)
-        .then((result) => {
-            window.location.href = 'dashboard.html';
-        }).catch((error) => {
-            alert(error.message);
-        });
-}
+
 
 function logout() {
     auth.signOut().then(() => {
