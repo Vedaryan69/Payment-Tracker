@@ -9,7 +9,7 @@ function signup() {
     auth.createUserWithEmailAndPassword(email, password)
         .then((userCredential) => {
             alert('Sign up successful! Please log in.');
-            window.location.href = 'login.html';
+            window.location.href = 'index.html';
         })
         .catch((error) => {
             alert(error.message);
@@ -26,7 +26,7 @@ function login() {
 
     auth.signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
-            window.location.href = 'index.html';
+            window.location.href = 'dashboard.html';
         })
         .catch((error) => {
             alert(error.message);
@@ -35,14 +35,14 @@ function login() {
 
 function logout() {
     auth.signOut().then(() => {
-        window.location.href = 'login.html';
+        window.location.href = 'index.html';
     });
 }
 
 function checkAuth() {
     auth.onAuthStateChanged(user => {
-        if (!user && !window.location.pathname.endsWith('login.html') && !window.location.pathname.endsWith('signup.html')) {
-            window.location.href = 'login.html';
+        if (!user && !window.location.pathname.endsWith('index.html') && !window.location.pathname.endsWith('signup.html')) {
+            window.location.href = 'index.html';
         }
     });
 }
