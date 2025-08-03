@@ -4,22 +4,28 @@ on:
   push:
     branches:
       - main # Set a branch to deploy
+  workflow_dispatch: # Allows manual triggering of the workflow
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
-      pages: write
-      id-token: write
+      contents: read # Read permission for checkout
+      pages: write   # Write permission for deploying to GitHub Pages
+      id-token: write # Required for OIDC authentication
+
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4 # Use v4 for latest features
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5 # Official action to set up Pages environment
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3 # Uploads your build output as an artifact
         with:
-          persist-credentials: false
+          path: './' # Path to your static files (your entire repository in this case)
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./
+        id: deployment
+        uses: actions/deploy-pages@v4 # Deploys the artifact to GitHub Pages
