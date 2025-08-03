@@ -9,12 +9,26 @@
 <body class="bg-gray-100 text-gray-800 flex items-center justify-center h-screen">
   <div class="w-full max-w-md bg-white rounded-2xl p-8 shadow">
     <h1 class="text-3xl font-bold mb-6 text-center">Sign Up</h1>
+    <!-- Email/Password Signup -->
     <div class="space-y-4">
       <input type="email" id="email" placeholder="Email" class="w-full p-3 border rounded">
       <input type="password" id="password" placeholder="Password" class="w-full p-3 border rounded">
-      <button onclick="signup()" class="w-full bg-blue-500 text-white p-3 rounded hover:bg-blue-600">Sign Up</button>
+      <button onclick="signup()" class="w-full bg-blue-500 text-white p-3 rounded hover:bg-blue-600">Sign Up with Email</button>
     </div>
-    <p class="text-center mt-4">
+
+    <div class="my-4 flex items-center">
+      <hr class="flex-grow border-t border-gray-300">
+      <span class="mx-4 text-gray-500">OR</span>
+      <hr class="flex-grow border-t border-gray-300">
+    </div>
+
+    <!-- Google Signup -->
+    <button onclick="signInWithGoogle()" class="w-full bg-red-500 text-white p-3 rounded hover:bg-red-600 mb-4 flex items-center justify-center">
+      <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M21.35,11.1H12.18V13.83H18.69C18.36,17.64 15.19,19.27 12.19,19.27C8.36,19.27 5,16.25 5,12C5,7.75 8.36,4.73 12.19,4.73C14.03,4.73 15.6,5.33 16.8,6.39L19.22,4.22C17.28,2.56 14.94,1.88 12.19,1.88C6.92,1.88 3,6.5 3,12C3,17.5 6.92,22.12 12.19,22.12C17.6,22.12 21.5,18.33 21.5,12.33C21.5,11.8 21.45,11.46 21.35,11.1Z"></path></svg>
+      Sign up with Google
+    </button>
+
+    <p class="text-center mt-6">
       Already have an account? <a href="index.html" class="text-blue-500 hover:underline">Login</a>
     </p>
   </div>

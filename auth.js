@@ -33,6 +33,39 @@ function login() {
         });
 }
 
+function signInWithGoogle() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider)
+        .then((result) => {
+            window.location.href = 'dashboard.html';
+        }).catch((error) => {
+            alert(error.message);
+        });
+}
+
+function signInWithPhone() {
+    const phoneNumber = document.getElementById('phoneNumber').value;
+    const appVerifier = window.recaptchaVerifier;
+    auth.signInWithPhoneNumber(phoneNumber, appVerifier)
+        .then((confirmationResult) => {
+            window.confirmationResult = confirmationResult;
+            alert('Verification code sent!');
+        }).catch((error) => {
+            alert("Error: " + error.message);
+            grecaptcha.reset(window.recaptchaWidgetId);
+        });
+}
+
+function verifyCode() {
+    const code = document.getElementById('verificationCode').value;
+    window.confirmationResult.confirm(code).then((result) => {
+        window.location.href = 'dashboard.html';
+    }).catch((error) => {
+        alert('Invalid verification code');
+    });
+}
+
+
 function logout() {
     auth.signOut().then(() => {
         window.location.href = 'index.html';
@@ -41,11 +74,30 @@ function logout() {
 
 function checkAuth() {
     auth.onAuthStateChanged(user => {
-        if (!user && !window.location.pathname.endsWith('index.html') && !window.location.pathname.endsWith('signup.html')) {
-            window.location.href = 'index.html';
+        if (user) {
+            if (window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('signup.html')) {
+                window.location.href = 'dashboard.html';
+            }
+        } else {
+            if (!window.location.pathname.endsWith('index.html') && !window.location.pathname.endsWith('signup.html')) {
+                window.location.href = 'index.html';
+            }
         }
     });
 }
 
-// Run checkAuth on every page load
-document.addEventListener('DOMContentLoaded', checkAuth);
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize reCAPTCHA verifier
+    if (document.getElementById('recaptcha-container')) {
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+            'size': 'invisible',
+            'callback': (response) => {
+                // reCAPTCHA solved, allow signInWithPhoneNumber.
+            }
+        });
+        window.recaptchaVerifier.render().then((widgetId) => {
+            window.recaptchaWidgetId = widgetId;
+        });
+    }
+    checkAuth();
+});
