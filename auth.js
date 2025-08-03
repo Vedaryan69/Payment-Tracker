@@ -1,60 +1,50 @@
-function getUsers() {
-    const users = localStorage.getItem('users');
-    return users ? JSON.parse(users) : [];
-}
-
-function saveUsers(users) {
-    localStorage.setItem('users', JSON.stringify(users));
-}
-
 function signup() {
-    const username = document.getElementById('username').value.trim();
+    const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value.trim();
 
-    if (!username || !password) {
-        return alert('Username and password are required.');
+    if (!email || !password) {
+        return alert('Email and password are required.');
     }
 
-    const users = getUsers();
-    if (users.find(u => u.username === username)) {
-        return alert('Username already exists.');
-    }
-
-    users.push({ username, password });
-    saveUsers(users);
-    alert('Sign up successful! Please log in.');
-    window.location.href = 'login.html';
+    auth.createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            alert('Sign up successful! Please log in.');
+            window.location.href = 'login.html';
+        })
+        .catch((error) => {
+            alert(error.message);
+        });
 }
 
 function login() {
-    const username = document.getElementById('username').value.trim();
+    const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value.trim();
 
-    if (!username || !password) {
-        return alert('Username and password are required.');
+    if (!email || !password) {
+        return alert('Email and password are required.');
     }
 
-    const users = getUsers();
-    const user = users.find(u => u.username === username && u.password === password);
-
-    if (user) {
-        sessionStorage.setItem('loggedInUser', username);
-        window.location.href = 'index.html';
-    } else {
-        alert('Invalid username or password.');
-    }
+    auth.signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            window.location.href = 'index.html';
+        })
+        .catch((error) => {
+            alert(error.message);
+        });
 }
 
 function logout() {
-    sessionStorage.removeItem('loggedInUser');
-    window.location.href = 'login.html';
+    auth.signOut().then(() => {
+        window.location.href = 'login.html';
+    });
 }
 
 function checkAuth() {
-    const loggedInUser = sessionStorage.getItem('loggedInUser');
-    if (!loggedInUser && !window.location.pathname.endsWith('login.html') && !window.location.pathname.endsWith('signup.html')) {
-        window.location.href = 'login.html';
-    }
+    auth.onAuthStateChanged(user => {
+        if (!user && !window.location.pathname.endsWith('login.html') && !window.location.pathname.endsWith('signup.html')) {
+            window.location.href = 'login.html';
+        }
+    });
 }
 
 // Run checkAuth on every page load
